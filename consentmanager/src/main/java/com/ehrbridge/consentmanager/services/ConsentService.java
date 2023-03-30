@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.ehrbridge.consentmanager.dao.ConsentDataAccess;
 import com.ehrbridge.consentmanager.helpers.HTTPHelper;
 import com.ehrbridge.consentmanager.models.ConsentObject;
+import com.ehrbridge.consentmanager.models.ConsentRequest;
 import com.ehrbridge.consentmanager.models.Constants;
 import com.ehrbridge.consentmanager.models.SignedConsentObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -45,10 +46,10 @@ public class ConsentService {
     }
 
     // Dispatch consent request to the Patient server
-    public boolean dispatchConsentRequest(ConsentObject consentObject) {
+    public boolean dispatchConsentRequest(ConsentRequest consentRequest) {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         try {
-            String bodyJSON = ow.writeValueAsString(consentObject);
+            String bodyJSON = ow.writeValueAsString(consentRequest);
             HTTPHelper http = new HTTPHelper();
             http.post(Constants.PATIENT_SERVER_HOST + Constants.PATIENT_SERVER_CONSENT_ENDPOINT, bodyJSON);
             return http.getStatus().value() == 200;
@@ -63,12 +64,13 @@ public class ConsentService {
 
     // Send notification to Gateway about update in consent status
     // Also sends the signed consent object
-    public boolean dispatchConsentUpdate(ConsentObject consentObject) {
+    public boolean dispatchConsentUpdate(ConsentRequest consentRequest) {
 
+        ConsentObject consentObject = consentRequest.consent_obj;
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String payload = "{}";
         try {
-            payload = ow.writeValueAsString(consentObject);
+            payload = ow.writeValueAsString(consentRequest);
         } catch (JsonProcessingException e) {
             System.out.println("[ConsentManager] ERR: failed to serialize signed consent object");
             e.printStackTrace();
@@ -78,12 +80,19 @@ public class ConsentService {
         // Construct the signed payload
         String jwt = this.signConsentObject(payload);
         // Serialize this JWT into json
-        SignedConsentObject sco = new SignedConsentObject(consentObject.consentID, consentObject.consentStatus, jwt);
+        SignedConsentObject sco = new SignedConsentObject(consentRequest.txnID, consentObject.consentStatus, jwt);
 
+        try {
+            String scoJSON = ow.writeValueAsString(sco);
+            HTTPHelper http = new HTTPHelper();
+            http.post(Constants.GATEWAY_HOST + Constants.GATEWAY_CONSENT_ENDPOINT, scoJSON);
+            return http.getStatus().value() == 200;
+        } catch (JsonProcessingException e) {
+            System.out.println("[ConsentManager] ERR: failed to serialize signed consent object");
+            e.printStackTrace();
+        }
 
-        HTTPHelper http = new HTTPHelper();
-        http.post(Constants.GATEWAY_HOST + Constants.GATEWAY_CONSENT_ENDPOINT, jwt);
-        return http.getStatus().value() == 200;
+        return false;
     }
 
     private String signConsentObject(String stringPayload) {

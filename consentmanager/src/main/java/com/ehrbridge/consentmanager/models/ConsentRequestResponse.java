@@ -10,10 +10,8 @@ import java.util.UUID;
  * */
 public class ConsentRequestResponse {
     public UUID consentID;
-    public String RSAPub;
 
     public ConsentRequestResponse(UUID consentID) {
         this.consentID = consentID;
-        this.RSAPub = RSAHelper.rsaPublicKeyObjectToPEM(Constants.RSA_PUB);
     }
 }
