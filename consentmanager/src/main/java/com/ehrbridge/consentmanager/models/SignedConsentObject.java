@@ -11,13 +11,13 @@ import java.util.UUID;
 public class SignedConsentObject {
     public UUID txnId;
     public String consent_status;
-    public String consent_obj; // serialized ConsentObject
+    public String signed_consent_obj; // serialized ConsentObject
     public String public_key;
 
     public SignedConsentObject(UUID txnId, String consentStatus, String consentJWT) {
         this.txnId = txnId;
         this.consent_status = consentStatus;
-        this.consent_obj = consentJWT;
+        this.signed_consent_obj = consentJWT;
         this.public_key = RSAHelper.rsaPublicKeyObjectToPEM(Constants.RSA_PUB);
     }
 }

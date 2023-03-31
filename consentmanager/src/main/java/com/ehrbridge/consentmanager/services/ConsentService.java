@@ -70,7 +70,7 @@ public class ConsentService {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String payload = "{}";
         try {
-            payload = ow.writeValueAsString(consentRequest);
+            payload = ow.writeValueAsString(consentObject);
         } catch (JsonProcessingException e) {
             System.out.println("[ConsentManager] ERR: failed to serialize signed consent object");
             e.printStackTrace();
