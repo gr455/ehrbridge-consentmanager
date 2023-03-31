@@ -1,6 +1,8 @@
+server:
+  port: 8083
 app:
   datasource:
-    jdbc-url: jdbc:postgresql://localhost:5432/ehrbridge-cm
+    jdbc-url: jdbc:postgresql://localhost:5432/ehrbridgecm
     username: postgres
     password: mysecretpassword
     pool-size: 30

@@ -23,7 +23,7 @@ public class ConsentController {
          this.consentService = consentService;
      }
 
-     @RequestMapping(value = "/request", method = RequestMethod.POST)
+     @RequestMapping(value = "/recieve", method = RequestMethod.POST)
      @ResponseBody
      public ConsentRequestResponse createConsentRequest(@RequestBody ConsentRequest consentRequest) {
          ConsentObject consentObject = consentRequest.consent_obj;
