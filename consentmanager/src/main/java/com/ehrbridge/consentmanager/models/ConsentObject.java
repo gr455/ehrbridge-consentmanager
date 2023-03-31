@@ -8,7 +8,7 @@ import java.util.UUID;
  * the different entities of EHBr
  * */
 public class ConsentObject {
-    public final UUID consentID;
+    public UUID consentID;
     public UUID ehbrID;
     public UUID hiuID;
     public UUID hipID;

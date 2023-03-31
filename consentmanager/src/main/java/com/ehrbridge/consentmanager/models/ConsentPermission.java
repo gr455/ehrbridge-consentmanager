@@ -12,14 +12,3 @@ public class ConsentPermission {
         this.dateRange = new DateRange(dateFrom, dateThrough);
     }
 }
-
-class DateRange {
-
-    public Date from;
-    public Date to;
-
-    public DateRange(Date dateFrom, Date dateThrough) {
-        this.from = dateFrom;
-        this.to = dateThrough;
-    }
-}

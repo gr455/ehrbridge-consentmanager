@@ -1,0 +1,6 @@
+app:
+  datasource:
+    jdbc-url: jdbc:postgresql://localhost:5432/ehrbridge-cm
+    username: postgres
+    password: mysecretpassword
+    pool-size: 30
