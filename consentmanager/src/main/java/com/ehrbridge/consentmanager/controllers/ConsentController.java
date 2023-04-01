@@ -26,9 +26,12 @@ public class ConsentController {
      @RequestMapping(value = "/recieve", method = RequestMethod.POST)
      @ResponseBody
      public ConsentRequestResponse createConsentRequest(@RequestBody ConsentRequest consentRequest) {
+         System.out.println(consentRequest.requestDetails);
+         System.out.println(consentRequest.txnID);
+         System.out.println(consentRequest.consent_obj);
          ConsentObject consentObject = consentRequest.consent_obj;
          // Set consent status to pending
-         consentObject.consentStatus = "PENDING";
+         consentObject.consent_status = "PENDING";
          // consentObject.permission = new ConsentPermission(new Date(), new Date(), new Date());
 
          // Add consent object to DB
@@ -46,12 +49,14 @@ public class ConsentController {
      @RequestMapping(value = "/notify-status", method = RequestMethod.POST)
      @ResponseBody
      public void notifyStatusHook(@RequestBody ConsentRequest consentRequest) {
+
          // Get stored consent object
          ConsentObject consentObject = consentRequest.consent_obj;
          ConsentObject storedConsentObject = consentObject;// this.consentService.getConsentObject(consentObject.consentID);
 
          // Update consent status to REJECTED or GRANTED
-         storedConsentObject.consentStatus = consentObject.consentStatus;
+         storedConsentObject.consent_status = consentObject.consent_status;
+         System.out.println(storedConsentObject.consent_status);
 
          // Update the consent object in DB
          this.consentService.updateConsentObject(storedConsentObject);

@@ -9,7 +9,7 @@ import java.util.UUID;
  * */
 public class ConsentObject {
     public UUID consentID;
-    public UUID ehbrID;
+    public UUID ehrbID;
     public UUID hiuID;
     public UUID hipID;
     public UUID doctorID;
@@ -17,12 +17,12 @@ public class ConsentObject {
     public String[] departments;
     public String consentDescription;
     public ConsentPermission permission;
-    public String consentStatus;
+    public String consent_status;
 
     // Generates a random UUID for consentID and makes the object
-    public ConsentObject(UUID ehbrID, UUID hiuID, UUID hipID, UUID doctorID, String[] hiType, String[] departments, String consentDescription, ConsentPermission permission, String consentStatus) {
+    public ConsentObject(UUID ehrbID, UUID hiuID, UUID hipID, UUID doctorID, String[] hiType, String[] departments, String consentDescription, ConsentPermission permission, String consentStatus) {
         this.consentID = UUID.randomUUID();
-        this.ehbrID = ehbrID;
+        this.ehrbID = ehrbID;
         this.hiuID = hiuID;
         this.hipID = hipID;
         this.doctorID = doctorID;
@@ -30,7 +30,7 @@ public class ConsentObject {
         this.departments = departments;
         this.consentDescription = consentDescription;
         this.permission = permission;
-        this.consentStatus = consentStatus;
+        this.consent_status = consentStatus;
     }
     @Override
     public String toString() {

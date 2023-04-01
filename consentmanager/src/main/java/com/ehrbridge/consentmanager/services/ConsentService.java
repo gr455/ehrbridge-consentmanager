@@ -49,12 +49,15 @@ public class ConsentService {
     public boolean dispatchConsentRequest(ConsentRequest consentRequest) {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         try {
-            String bodyJSON = ow.writeValueAsString(consentRequest);
+            System.out.println(consentRequest.txnID);
+            System.out.println(consentRequest.requestDetails);
+            System.out.println(consentRequest.consent_obj);
+//            String bodyJSON = ow.writeValueAsString(consentRequest);
             HTTPHelper http = new HTTPHelper();
-            http.post(Constants.PATIENT_SERVER_HOST + Constants.PATIENT_SERVER_CONSENT_ENDPOINT, bodyJSON);
-            return http.getStatus().value() == 200;
-
-        } catch (JsonProcessingException e) {
+//            http.post(Constants.PATIENT_SERVER_HOST + Constants.PATIENT_SERVER_CONSENT_ENDPOINT, bodyJSON);
+//            return http.getStatus().value() == 200;
+            return true;
+        } catch (Exception e) {
             System.out.println("[ConsentManager] ERR: failed to serialize consent request");
             e.printStackTrace();
         }
@@ -80,11 +83,12 @@ public class ConsentService {
         // Construct the signed payload
         String jwt = this.signConsentObject(payload);
         // Serialize this JWT into json
-        SignedConsentObject sco = new SignedConsentObject(consentRequest.txnID, consentObject.consentStatus, jwt);
+        SignedConsentObject sco = new SignedConsentObject(consentRequest.txnID, consentObject.consent_status, jwt);
 
         try {
             String scoJSON = ow.writeValueAsString(sco);
             HTTPHelper http = new HTTPHelper();
+            System.out.println(scoJSON);
             http.post(Constants.GATEWAY_HOST + Constants.GATEWAY_CONSENT_ENDPOINT, scoJSON);
             return http.getStatus().value() == 200;
         } catch (JsonProcessingException e) {

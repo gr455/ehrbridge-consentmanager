@@ -1,6 +1,6 @@
 CREATE TABLE consent_object (
     consentID UUID NOT NULL PRIMARY KEY,
-    ehbrID UUID,
+    ehrbID UUID,
     hiuID UUID,
     hipID UUID,
     doctorID UUID,

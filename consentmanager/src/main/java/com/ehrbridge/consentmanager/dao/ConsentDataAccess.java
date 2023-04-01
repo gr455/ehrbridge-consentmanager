@@ -18,18 +18,18 @@ public class ConsentDataAccess {
         this.jdbcTemplate = jdbcTemplate;
     }
     public UUID insertConsentObject(ConsentObject consentObject) {
-        final String sql = "INSERT INTO consent_object (consentid, ehbrid, hiuid, hipid, doctorid, hitype, departments, consentdescription, consentstatus, consentvalidity, consentdatefrom, consentdatethrough) values (?,?,?,?,?,?,?,?,?,?,?,?)";
+        final String sql = "INSERT INTO consent_object (consentid, ehrbid, hiuid, hipid, doctorid, hitype, departments, consentdescription, consentstatus, consentvalidity, consentdatefrom, consentdatethrough) values (?,?,?,?,?,?,?,?,?,?,?,?)";
         jdbcTemplate.update(
                 sql,
                 consentObject.consentID,
-                consentObject.ehbrID,
+                consentObject.ehrbID,
                 consentObject.hiuID,
                 consentObject.hipID,
                 consentObject.doctorID,
                 consentObject.hiType,
                 consentObject.departments,
                 consentObject.consentDescription,
-                consentObject.consentStatus,
+                consentObject.consent_status,
                 consentObject.permission.consent_validity,
                 consentObject.permission.dateRange.from,
                 consentObject.permission.dateRange.to
@@ -42,7 +42,7 @@ public class ConsentDataAccess {
         final String sql = "SELECT * from consent_object where consentid = ?";
         ConsentObject consent = this.jdbcTemplate.queryForObject(sql, new Object[]{consentID}, (resultSet, i) -> {
             ConsentObject consentObject = new ConsentObject(
-                    (UUID) resultSet.getObject("ehbrid"),
+                    (UUID) resultSet.getObject("ehrbid"),
                     (UUID) resultSet.getObject("hiuid"),
                     (UUID) resultSet.getObject("hipid"),
                     (UUID) resultSet.getObject("doctorid"),
@@ -68,7 +68,7 @@ public class ConsentDataAccess {
 
     public int updateConsentObject(ConsentObject consentObject) {
         final String sql = "UPDATE consent_object set consentstatus = ? WHERE consentid = ?";
-        jdbcTemplate.update(sql, consentObject.consentStatus, consentObject.consentID);
+        jdbcTemplate.update(sql, consentObject.consent_status, consentObject.consentID);
         return 1;
     };
 }

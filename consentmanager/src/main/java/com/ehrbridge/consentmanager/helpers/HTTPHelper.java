@@ -14,6 +14,7 @@ public class HTTPHelper {
         this.headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         headers.add("Accept", "*/*");
+        headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
     }
 
     public String get(String url) {
@@ -24,8 +25,12 @@ public class HTTPHelper {
     }
 
     public String post(String url, String json) {
+        System.out.println(json);
         HttpEntity<String> requestEntity = new HttpEntity<String>(json, headers);
+        System.out.println(url);
+        System.out.println(requestEntity);
         ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        System.out.println("edckjhj");
         this.setStatus(responseEntity.getStatusCode());
         return responseEntity.getBody();
     }

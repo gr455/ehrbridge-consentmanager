@@ -9,13 +9,13 @@ import java.util.UUID;
  * The payload of the JWT is the serialized ConsentObject object
  **/
 public class SignedConsentObject {
-    public UUID txnId;
+    public UUID txnID;
     public String consent_status;
     public String signed_consent_obj; // serialized ConsentObject
     public String public_key;
 
-    public SignedConsentObject(UUID txnId, String consentStatus, String consentJWT) {
-        this.txnId = txnId;
+    public SignedConsentObject(UUID txnID, String consentStatus, String consentJWT) {
+        this.txnID = txnID;
         this.consent_status = consentStatus;
         this.signed_consent_obj = consentJWT;
         this.public_key = RSAHelper.rsaPublicKeyObjectToPEM(Constants.RSA_PUB);
