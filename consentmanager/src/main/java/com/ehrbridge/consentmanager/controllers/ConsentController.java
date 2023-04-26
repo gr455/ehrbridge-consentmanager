@@ -26,10 +26,12 @@ public class ConsentController {
      @RequestMapping(value = "/recieve", method = RequestMethod.POST)
      @ResponseBody
      public ConsentRequestResponse createConsentRequest(@RequestBody ConsentRequest consentRequest) {
-         System.out.println(consentRequest.requestDetails);
+         System.out.println(consentRequest.request_details);
          System.out.println(consentRequest.txnID);
          System.out.println(consentRequest.consent_obj);
          ConsentObject consentObject = consentRequest.consent_obj;
+         System.out.println("\n\n\n\nHELLO\n\n\n\n");
+         System.out.println(consentRequest);
          // Set consent status to pending
          consentObject.consent_status = "PENDING";
          // consentObject.permission = new ConsentPermission(new Date(), new Date(), new Date());
@@ -52,7 +54,7 @@ public class ConsentController {
 
          // Get stored consent object
          ConsentObject consentObject = consentRequest.consent_obj;
-         ConsentObject storedConsentObject = consentObject;// this.consentService.getConsentObject(consentObject.consentID);
+         ConsentObject storedConsentObject = consentObject; //this.consentService.getConsentObject(consentObject.consentID);
 
          // Update consent status to REJECTED or GRANTED
          storedConsentObject.consent_status = consentObject.consent_status;

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class ConsentRequest {
     public UUID txnID;
-    public RequestDetails requestDetails;
+    public RequestDetails request_details;
     public ConsentObject consent_obj;
 }
 

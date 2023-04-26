@@ -6,12 +6,15 @@ import com.ehrbridge.consentmanager.dao.ConsentDataAccess;
 import com.ehrbridge.consentmanager.helpers.HTTPHelper;
 import com.ehrbridge.consentmanager.models.ConsentObject;
 import com.ehrbridge.consentmanager.models.ConsentRequest;
+import com.ehrbridge.consentmanager.models.ConsentRequestPS;
 import com.ehrbridge.consentmanager.models.Constants;
 import com.ehrbridge.consentmanager.models.SignedConsentObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 
 import java.security.KeyFactory;
@@ -27,6 +30,9 @@ import java.util.UUID;
 @Service
 public class ConsentService {
     private final ConsentDataAccess consentDataAccess;
+
+    @Value("${callback-url}")
+    private String callback;
 
     @Autowired
     public ConsentService(ConsentDataAccess consentDataAccess) {
@@ -50,13 +56,19 @@ public class ConsentService {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         try {
             System.out.println(consentRequest.txnID);
-            System.out.println(consentRequest.requestDetails);
+            System.out.println(consentRequest.request_details);
             System.out.println(consentRequest.consent_obj);
-//            String bodyJSON = ow.writeValueAsString(consentRequest);
+            var consentRequestPS = ConsentRequestPS.builder()
+                                                   .callback_url(callback)
+                                                   .consent_obj(consentRequest.consent_obj)
+                                                   .request_details(consentRequest.request_details)
+                                                   .txnID(consentRequest.txnID)
+                                                   .build();
+            String bodyJSON = ow.writeValueAsString(consentRequestPS);
             HTTPHelper http = new HTTPHelper();
-//            http.post(Constants.PATIENT_SERVER_HOST + Constants.PATIENT_SERVER_CONSENT_ENDPOINT, bodyJSON);
-//            return http.getStatus().value() == 200;
-            return true;
+            // System.out.println("\n\n\n\n\n\n\n" + bodyJSON);
+            http.post(Constants.PATIENT_SERVER_HOST + Constants.PATIENT_SERVER_CONSENT_ENDPOINT, bodyJSON);
+            return http.getStatus().value() == 200;
         } catch (Exception e) {
             System.out.println("[ConsentManager] ERR: failed to serialize consent request");
             e.printStackTrace();
@@ -68,7 +80,6 @@ public class ConsentService {
     // Send notification to Gateway about update in consent status
     // Also sends the signed consent object
     public boolean dispatchConsentUpdate(ConsentRequest consentRequest) {
-
         ConsentObject consentObject = consentRequest.consent_obj;
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String payload = "{}";
@@ -88,8 +99,10 @@ public class ConsentService {
         try {
             String scoJSON = ow.writeValueAsString(sco);
             HTTPHelper http = new HTTPHelper();
+            System.out.print("fjskldjfklaj");
             System.out.println(scoJSON);
             http.post(Constants.GATEWAY_HOST + Constants.GATEWAY_CONSENT_ENDPOINT, scoJSON);
+            //http.setStatus(HttpStatusCode.valueOf(200));
             return http.getStatus().value() == 200;
         } catch (JsonProcessingException e) {
             System.out.println("[ConsentManager] ERR: failed to serialize signed consent object");

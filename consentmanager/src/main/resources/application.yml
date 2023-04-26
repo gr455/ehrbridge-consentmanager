@@ -6,3 +6,5 @@ app:
     username: postgres
     password: mysecretpassword
     pool-size: 30
+
+callback-url: http://localhost:8083/api/v1/consent/notify-status
